@@ -1,10 +1,10 @@
 from pprint import pprint
 from abstract_syntax_tree import (
-    ASTNode,
     Assignment,
     BinaryOperation,
     BinaryOperator,
     Block,
+    Boolean,
     Command,
     Exit,
     Expression,
@@ -29,13 +29,7 @@ class Interpreter:
         """
         self.environment = {}
 
-    def get_environment(self) -> dict:
-        """
-        Returns the current environment of the interpreter.
-        """
-        return self.environment
-
-    def evaluate_expression(self, node: Expression):
+    def _evaluate_expression(self, node: Expression) -> float | bool:
         """
         Evaluates an expression node and returns its value.
 
@@ -48,21 +42,26 @@ class Interpreter:
         if isinstance(node, Number):
             return node.value
 
+        elif isinstance(node, Boolean):
+            return bool(node.value)
+
         elif isinstance(node, Variable):
             if node.name in self.environment:
                 return self.environment[node.name]
             raise NameError(f"Undefined variable: {node.name}")
 
         elif isinstance(node, UnaryOperation):
-            operand = self.evaluate_expression(node.operand)
+            operand = self._evaluate_expression(node.operand)
             if node.operator == UnaryOperator.MINUS:
                 return -operand
+            if node.operator == UnaryOperator.NOT:
+                return not operand
 
             raise NotImplementedError(f"Unary operator {node.operator} not implemented")
 
         elif isinstance(node, BinaryOperation):
-            left = self.evaluate_expression(node.left)
-            right = self.evaluate_expression(node.right)
+            left = self._evaluate_expression(node.left)
+            right = self._evaluate_expression(node.right)
 
             if node.operator == BinaryOperator.ADD:
                 return left + right
@@ -79,9 +78,15 @@ class Interpreter:
             elif node.operator == BinaryOperator.EQUAL:
                 return left == right
 
+            elif node.operator == BinaryOperator.AND:
+                return left and right
+
+            elif node.operator == BinaryOperator.OR:
+                return left or right
+
             elif node.operator == BinaryOperator.ASSIGN:
                 if isinstance(node.left, Variable):
-                    value = self.evaluate_expression(node.right)
+                    value = self._evaluate_expression(node.right)
                     self.environment[node.left.name] = value
                     return value
 
@@ -93,7 +98,7 @@ class Interpreter:
         else:
             raise TypeError(f"Unexpected node type: {type(node)}")
 
-    def execute_command(self, command: Command):
+    def _execute_command(self, command: Command):
         """
         Executes a command node.
 
@@ -102,11 +107,11 @@ class Interpreter:
             TypeError: If the command type is unrecognized.
         """
         if isinstance(command, Assignment):
-            value = self.evaluate_expression(command.value)
+            value = self._evaluate_expression(command.value)
             self.environment[command.variable.name] = value
 
         elif isinstance(command, Print):
-            value = self.evaluate_expression(command.expression)
+            value = self._evaluate_expression(command.expression)
             print(value)
 
         elif isinstance(command, Exit):
@@ -118,19 +123,34 @@ class Interpreter:
 
         elif isinstance(command, Block):
             for statement in command.statements:
-                self.execute_command(statement)
+                self._execute_command(statement)
 
         elif isinstance(command, If):
-            condition = self.evaluate_expression(command.condition)
+            condition = self._evaluate_expression(command.condition)
             if condition:
-                self.execute_command(command.then_branch)
+                self._execute_command(command.then_branch)
 
             elif command.else_branch is not None:
-                self.execute_command(command.else_branch)
+                self._execute_command(command.else_branch)
 
         elif isinstance(command, While):
-            while self.evaluate_expression(command.condition):
-                self.execute_command(command.body)
+            while self._evaluate_expression(command.condition):
+                self._execute_command(command.body)
 
         else:
             raise TypeError(f"Unexpected command type: {type(command)}")
+
+    def execute(self, program: Block):
+        """
+        Executes a program represented as a Block of commands.
+
+        Args:
+            program (Block): The program to execute.
+        """
+        self._execute_command(program)
+
+    def get_environment(self) -> dict:
+        """
+        Returns the current environment of the interpreter.
+        """
+        return self.environment

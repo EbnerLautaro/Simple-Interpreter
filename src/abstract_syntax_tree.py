@@ -8,10 +8,10 @@ class UnaryOperator(Enum):
     Enum representing the types of unary operators in an expression.
     """
 
-    # # Logical operators
-    # NOT = "NOT"
     # Arithmetic operators
     MINUS = "MINUS"
+    # # Logical operators
+    NOT = "NOT"
 
 
 class BinaryOperator(Enum):
@@ -26,8 +26,8 @@ class BinaryOperator(Enum):
     DIVIDE = "DIVIDE"
     EQUAL = "EQUAL"
     # # Logical operators
-    # AND = "AND"
-    # OR = "OR"
+    AND = "AND"
+    OR = "OR"
     # Others
     ASSIGN = "ASSIGN"
 
@@ -60,6 +60,15 @@ class Number(Expression):
     """
 
     def __init__(self, value: float):
+        self.value = value
+
+
+class Boolean(Expression):
+    """
+    Represents a boolean literal in the abstract syntax tree.
+    """
+
+    def __init__(self, value: bool):
         self.value = value
 
 
