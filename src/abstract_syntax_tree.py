@@ -77,7 +77,7 @@ class BinaryOperation(Expression):
     Represents a binary operation in the abstract syntax tree.
     """
 
-    def __init__(self, left: ASTNode, operator: BinaryOperator, right: ASTNode):
+    def __init__(self, left: Expression, operator: BinaryOperator, right: Expression):
         self.left = left
         self.operator = operator
         self.right = right
@@ -88,7 +88,7 @@ class UnaryOperation(Expression):
     Represents a unary operation in the abstract syntax tree.
     """
 
-    def __init__(self, operator: UnaryOperator, operand: ASTNode):
+    def __init__(self, operator: UnaryOperator, operand: Expression):
         self.operator = operator
         self.operand = operand
 
@@ -109,7 +109,7 @@ class Assignment(Command):
     Represents an assignment operation in the abstract syntax tree.
     """
 
-    def __init__(self, variable: Variable, value: ASTNode):
+    def __init__(self, variable: Variable, value: Expression):
         self.variable = variable
         self.value = value
 
@@ -128,7 +128,7 @@ class If(Command):
     Represents an if statement in the abstract syntax tree.
     """
 
-    def __init__(self, condition: ASTNode, then_branch: Block, else_branch: Optional[Block] = None):
+    def __init__(self, condition: Expression, then_branch: Block, else_branch: Optional[Block] = None):
         self.condition = condition
         self.then_branch = then_branch
         self.else_branch = else_branch
@@ -139,7 +139,7 @@ class While(Command):
     Represents a while loop in the abstract syntax tree.
     """
 
-    def __init__(self, condition: ASTNode, body: Block):
+    def __init__(self, condition: Expression, body: Block):
         self.condition = condition
         self.body = body
 
@@ -149,7 +149,7 @@ class Print(Command):
     Represents a print command in the abstract syntax tree.
     """
 
-    def __init__(self, expression: ASTNode):
+    def __init__(self, expression: Expression):
         self.expression = expression
 
 
