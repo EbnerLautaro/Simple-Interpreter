@@ -151,3 +151,11 @@ class Print(Command):
 
     def __init__(self, expression: ASTNode):
         self.expression = expression
+
+
+class Exit(Command):
+    """
+    Represents an exit command in the abstract syntax tree.
+    """
+
+    pass
