@@ -1,5 +1,5 @@
-from pprint import pprint
 from abstract_syntax_tree import (
+    ASTPrimitives,
     Assignment,
     BinaryOperation,
     BinaryOperator,
@@ -23,13 +23,14 @@ class Interpreter:
     Represents an interpreter for evaluating and executing an abstract syntax tree (AST).
     """
 
-    def __init__(self):
+    def __init__(self, context: dict[str, ASTPrimitives] | None = None):
         """
         Initializes a new instance of the Interpreter class with an empty environment.
         """
-        self.environment = {}
+        self.context: dict[str, ASTPrimitives]
+        self._environment = context if context is not None else {}
 
-    def _evaluate_expression(self, node: Expression) -> float | bool:
+    def _evaluate_expression(self, node: Expression) -> ASTPrimitives:
         """
         Evaluates an expression node and returns its value.
 
@@ -46,8 +47,8 @@ class Interpreter:
             return bool(node.value)
 
         elif isinstance(node, Variable):
-            if node.name in self.environment:
-                return self.environment[node.name]
+            if node.name in self._environment:
+                return self._environment[node.name]
             raise NameError(f"Undefined variable: {node.name}")
 
         elif isinstance(node, UnaryOperation):
@@ -75,7 +76,7 @@ class Interpreter:
             elif node.operator == BinaryOperator.DIVIDE:
                 return left / right
 
-            elif node.operator == BinaryOperator.EQUAL:
+            elif node.operator == BinaryOperator.EQUALS:
                 return left == right
 
             elif node.operator == BinaryOperator.AND:
@@ -84,10 +85,22 @@ class Interpreter:
             elif node.operator == BinaryOperator.OR:
                 return left or right
 
+            elif node.operator == BinaryOperator.NOT_EQUALS:
+                return left != right
+
+            elif node.operator == BinaryOperator.GT:
+                return left > right
+            elif node.operator == BinaryOperator.LT:
+                return left < right
+            elif node.operator == BinaryOperator.GTE:
+                return left >= right
+            elif node.operator == BinaryOperator.LTE:
+                return left <= right
+
             elif node.operator == BinaryOperator.ASSIGN:
                 if isinstance(node.left, Variable):
                     value = self._evaluate_expression(node.right)
-                    self.environment[node.left.name] = value
+                    self._environment[node.left.name] = value
                     return value
 
                 raise SyntaxError("Left-hand side of assignment must be a variable")
@@ -98,7 +111,7 @@ class Interpreter:
         else:
             raise TypeError(f"Unexpected node type: {type(node)}")
 
-    def _execute_command(self, command: Command):
+    def _execute_command(self, command: Command, allow_output: bool):
         """
         Executes a command node.
 
@@ -108,49 +121,54 @@ class Interpreter:
         """
         if isinstance(command, Assignment):
             value = self._evaluate_expression(command.value)
-            self.environment[command.variable.name] = value
+            self._environment[command.variable.name] = value
 
         elif isinstance(command, Print):
-            value = self._evaluate_expression(command.expression)
-            print(value)
+            if allow_output:
+                value = self._evaluate_expression(command.expression)
+                print(value)
 
         elif isinstance(command, Exit):
+            if not allow_output:
+                raise SystemExit()
+
             print("Exiting the program.")
-            print("-" * 20, " Final environment ", "-" * 20)
-            pprint(self.environment)
-            print("-" * 60)
             raise SystemExit()
 
         elif isinstance(command, Block):
             for statement in command.statements:
-                self._execute_command(statement)
+                self._execute_command(statement, allow_output)
 
         elif isinstance(command, If):
             condition = self._evaluate_expression(command.condition)
             if condition:
-                self._execute_command(command.then_branch)
-
+                self._execute_command(command, allow_output)
             elif command.else_branch is not None:
-                self._execute_command(command.else_branch)
+                self._execute_command(command, allow_output)
 
         elif isinstance(command, While):
-            while self._evaluate_expression(command.condition):
-                self._execute_command(command.body)
+            condition = self._evaluate_expression(command.condition)
+
+            while condition:
+                self._execute_command(command.body, allow_output)
+                condition = self._evaluate_expression(command.condition)
+                if not condition:
+                    break
 
         else:
             raise TypeError(f"Unexpected command type: {type(command)}")
 
-    def execute(self, program: Block):
+    def execute(self, program: Block, allow_output: bool = True):
         """
         Executes a program represented as a Block of commands.
 
         Args:
             program (Block): The program to execute.
         """
-        self._execute_command(program)
+        self._execute_command(program, allow_output)
 
     def get_environment(self) -> dict:
         """
         Returns the current environment of the interpreter.
         """
-        return self.environment
+        return self._environment

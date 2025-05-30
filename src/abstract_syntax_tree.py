@@ -24,14 +24,20 @@ class BinaryOperator(Enum):
     SUBTRACT = "SUBTRACT"
     MULTIPLY = "MULTIPLY"
     DIVIDE = "DIVIDE"
-    EQUAL = "EQUAL"
-    # # Logical operators
+    EQUALS = "EQUALS"
+    NOT_EQUALS = "NOT_EQUALS"
+    GT = "GT"
+    LT = "LT"
+    GTE = "GTE"
+    LTE = "LTE"
+    # Logical operators
     AND = "AND"
     OR = "OR"
     # Others
     ASSIGN = "ASSIGN"
 
 
+ASTPrimitives = bool | int | float
 # --------------------------------------------------------------------------------------------
 
 
