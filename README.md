@@ -39,7 +39,7 @@ A continuacion se muestran ejemplos de programas, descriptos en nuestro AST y lu
 #### Ejemplo 1
 - AST:
     ```python
-    program = Block(
+    Block(
         [
             Assignment(Variable("x"), Number(3)),
             Print(Variable("x")),
