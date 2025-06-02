@@ -3,6 +3,54 @@
 En este repositorio se implementa un **árbol de sintaxis abstracta (AST)** y su correspondiente **intérprete**.  
 El lenguaje consiste en operaciones aritméticas y lógicas básicas, asignaciones, bloques secuenciales, condicionales `if-else`, un bucle `while` y un comando de salida por consola (`print`).  
 
+## Ejemplos
+Para poder probar o experimentar, es recomendado modificar el archivo `main.py`.
+A continuacion se muestran ejemplos de programas, descriptos en nuestro AST y luego el mismo programa escrito en pseudocodigo
+
+### Ejemplo 1
+- AST:
+    ```python
+    Block(
+        [
+            Assignment(Variable("x"), Number(3)),
+            Print(Variable("x")),
+            Assignment(Variable("x"), Number(5)),
+            Print(Variable("x")),
+        ]
+    )
+    ```
+- Pseudocodigo asociado:
+    ```text
+    x = 3
+    print x
+    x = 5
+    print x
+    ```
+### Ejemplo 2
+
+- AST 
+    ```python
+    Block(
+        [
+            Assignment(Variable("x"), Number(5)),
+            If(
+                BinaryOperation(Variable("x"), BinaryOperator.GT, Number(0)),
+                then_branch=Block([Print(Number(1))]),
+                else_branch=Block([Print(Number(0))]),
+            ),
+        ]
+    )
+    ```
+- Pseudocodigo asociado:
+    ```text
+    x = 5
+    if x > 0 then
+        print 1
+    else 
+        print 0
+    ```
+
+
 ## Estructura del repositorio
 ```text
 .
@@ -32,60 +80,12 @@ Con esta separación clara entre sintaxis y semántica, el proyecto resulta fác
 
 
 
-### Ejemplos
-Para poder probar o experimentar, es recomendado modificar el archivo `main.py`.
-A continuacion se muestran ejemplos de programas, descriptos en nuestro AST y luego el mismo programa escrito en pseudocodigo
-
-#### Ejemplo 1
-- AST:
-    ```python
-    Block(
-        [
-            Assignment(Variable("x"), Number(3)),
-            Print(Variable("x")),
-            Assignment(Variable("x"), Number(5)),
-            Print(Variable("x")),
-        ]
-    )
-    ```
-- Pseudocodigo asociado:
-    ```text
-    x = 3
-    print x
-    x = 5
-    print x
-    ```
-#### Ejemplo 2
-
-- AST 
-    ```python
-    Block(
-        [
-            Assignment(Variable("x"), Number(5)),
-            If(
-                BinaryOperation(Variable("x"), BinaryOperator.GT, Number(0)),
-                then_branch=Block([Print(Number(1))]),
-                else_branch=Block([Print(Number(0))]),
-            ),
-        ]
-    )
-    ```
-- Pseudocodigo asociado:
-    ```text
-    x = 5
-    if x > 0 then
-        print 1
-    else 
-        print 0
-    ```
-
-
-### Cómo ejecutar los tests
+## Cómo ejecutar los tests
 En los tests se encuentran ejemplos de programas un poco mas complejos, los cuales utilice para probar el interprete.
 ```bash
 pip install pytest 
 pytest
 ```
 
-### Aclaraciones finales
+## Aclaraciones finales
 - En esta implementacion, todas las variables tienen alcance global (global scope).
