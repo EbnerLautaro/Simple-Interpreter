@@ -25,7 +25,7 @@ class Interpreter:
 
     def __init__(self, context: dict[str, ASTPrimitives] | None = None):
         """
-        Initializes a new instance of the Interpreter class with an empty environment.
+        Initializes a new instance of the Interpreter class with an empty or partial environment.
         """
         self.context: dict[str, ASTPrimitives]
         self._environment = context if context is not None else {}
@@ -66,28 +66,20 @@ class Interpreter:
 
             if node.operator == BinaryOperator.ADD:
                 return left + right
-
             elif node.operator == BinaryOperator.SUBTRACT:
                 return left - right
-
             elif node.operator == BinaryOperator.MULTIPLY:
                 return left * right
-
             elif node.operator == BinaryOperator.DIVIDE:
                 return left / right
-
             elif node.operator == BinaryOperator.EQUALS:
                 return left == right
-
             elif node.operator == BinaryOperator.AND:
                 return left and right
-
             elif node.operator == BinaryOperator.OR:
                 return left or right
-
             elif node.operator == BinaryOperator.NOT_EQUALS:
                 return left != right
-
             elif node.operator == BinaryOperator.GT:
                 return left > right
             elif node.operator == BinaryOperator.LT:
@@ -96,7 +88,6 @@ class Interpreter:
                 return left >= right
             elif node.operator == BinaryOperator.LTE:
                 return left <= right
-
             elif node.operator == BinaryOperator.ASSIGN:
                 if isinstance(node.left, Variable):
                     value = self._evaluate_expression(node.right)
@@ -142,9 +133,9 @@ class Interpreter:
         elif isinstance(command, If):
             condition = self._evaluate_expression(command.condition)
             if condition:
-                self._execute_command(command, allow_output)
-            elif command.else_branch is not None:
-                self._execute_command(command, allow_output)
+                self._execute_command(command.then_branch, allow_output)
+            if not condition and command.else_branch is not None:
+                self._execute_command(command.else_branch, allow_output)
 
         elif isinstance(command, While):
             condition = self._evaluate_expression(command.condition)
@@ -152,8 +143,6 @@ class Interpreter:
             while condition:
                 self._execute_command(command.body, allow_output)
                 condition = self._evaluate_expression(command.condition)
-                if not condition:
-                    break
 
         else:
             raise TypeError(f"Unexpected command type: {type(command)}")
