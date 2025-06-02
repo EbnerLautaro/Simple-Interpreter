@@ -33,33 +33,52 @@ Con esta separación clara entre sintaxis y semántica, el proyecto resulta fác
 
 
 ### Ejemplos
+Para poder probar o experimentar, es recomendado modificar el archivo `main.py`.
+A continuacion se muestran ejemplos de programas, descriptos en nuestro AST y luego el mismo programa escrito en pseudocodigo
 
-En `main.py` encontrarás este programa de demostración:
+#### Ejemplo 1
+- AST:
+    ```python
+    program = Block(
+        [
+            Assignment(Variable("x"), Number(3)),
+            Print(Variable("x")),
+            Assignment(Variable("x"), Number(5)),
+            Print(Variable("x")),
+        ]
+    )
+    ```
+- Pseudocodigo asociado:
+    ```text
+    x = 3
+    print x
+    x = 5
+    print x
+    ```
+#### Ejemplo 2
 
-```python
-program = Block(
-    [
-        Print(Variable("x")),
-        Assignment(Variable("x"), Number(5)),
-        Print(Variable("x")),
-    ]
-)
-```
-A continuación se muestra otro ejemplo, más completo, que ilustra la creación manual del AST:
-```python
-Block(
-    [
-        Assignment(Variable("x"), Number(5)),
-        If(
-            BinaryOperation(Variable("x"), BinaryOperator.GT, Number(0)),
-            then_branch=Block([Print(Number(1))]),
-            else_branch=Block([Print(Number(0))]),
-        ),
-    ]
-)
-```
-Para ejecutarlo basta con escribir en la terminal `python src/main.py`.
-El intérprete mostrará la salida solicitada y luego el entorno resultante.
+- AST 
+    ```python
+    Block(
+        [
+            Assignment(Variable("x"), Number(5)),
+            If(
+                BinaryOperation(Variable("x"), BinaryOperator.GT, Number(0)),
+                then_branch=Block([Print(Number(1))]),
+                else_branch=Block([Print(Number(0))]),
+            ),
+        ]
+    )
+    ```
+- Pseudocodigo asociado:
+    ```text
+    x = 5
+    if x > 0 then
+        print 1
+    else 
+        print 0
+    ```
+
 
 ### Cómo ejecutar los tests
 En los tests se encuentran ejemplos de programas un poco mas complejos, los cuales utilice para probar el interprete.
