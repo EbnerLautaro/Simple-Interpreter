@@ -23,7 +23,7 @@ Para poder probar o experimentar, es recomendado modificar el archivo `main.py`.
 A continuacion se muestran ejemplos de programas, descriptos en nuestro AST y luego el mismo programa escrito en pseudocodigo
 
 ### Ejemplo 1
-- AST:
+- **AST**:
     ```python
     Block(
         [
@@ -34,7 +34,7 @@ A continuacion se muestran ejemplos de programas, descriptos en nuestro AST y lu
         ]
     )
     ```
-- Pseudocodigo asociado:
+- **Pseudocodigo asociado**:
     ```text
     x = 3
     print x
@@ -43,7 +43,7 @@ A continuacion se muestran ejemplos de programas, descriptos en nuestro AST y lu
     ```
 ### Ejemplo 2
 
-- AST 
+- **AST** 
     ```python
     Block(
         [
@@ -56,7 +56,7 @@ A continuacion se muestran ejemplos de programas, descriptos en nuestro AST y lu
         ]
     )
     ```
-- Pseudocodigo asociado:
+- **Pseudocodigo asociado**:
     ```text
     x = 5
     if x > 0 then
