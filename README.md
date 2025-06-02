@@ -3,7 +3,22 @@
 En este repositorio se implementa un **árbol de sintaxis abstracta (AST)** y su correspondiente **intérprete**.  
 El lenguaje consiste en operaciones aritméticas y lógicas básicas, asignaciones, bloques secuenciales, condicionales `if-else`, un bucle `while` y un comando de salida por consola (`print`).  
 
-## Ejemplos
+## Estructura del repositorio
+```text
+.
+├── src
+│   ├── abstract_syntax_tree.py
+│   ├── interpreter.py
+│   └── main.py
+└── tests
+```
+- `abstract_syntax_tree.py` – Define la gramática interna del lenguaje.
+- `interpreter.py` – Recorrido depth-first que evalúa expresiones y ejecuta comandos en un entorno mutable.
+- `main.py` – Punto de entrada sencillo para construir y probar programas propios.
+- `tests` (opcional); requieren *pytest*. No son obligatorias para usar el intérprete. 
+
+
+## Ejemplos de programas
 Para poder probar o experimentar, es recomendado modificar el archivo `main.py`.
 A continuacion se muestran ejemplos de programas, descriptos en nuestro AST y luego el mismo programa escrito en pseudocodigo
 
@@ -49,21 +64,6 @@ A continuacion se muestran ejemplos de programas, descriptos en nuestro AST y lu
     else 
         print 0
     ```
-
-
-## Estructura del repositorio
-```text
-.
-├── src
-│   ├── abstract_syntax_tree.py
-│   ├── interpreter.py
-│   └── main.py
-└── tests
-```
-- `abstract_syntax_tree.py` – Define la gramática interna del lenguaje.
-- `interpreter.py` – Recorrido depth-first que evalúa expresiones y ejecuta comandos en un entorno mutable.
-- `main.py` – Punto de entrada sencillo para construir y probar programas propios.
-- `tests` (opcional); requieren *pytest*. No son obligatorias para usar el intérprete. 
 
 ## Extender el lenguaje
 A continuacion se explica el procedimiento para poder extender el lenguaje:
