@@ -166,11 +166,3 @@ class Print(Command):
 
     def __init__(self, expression: Expression):
         self.expression = expression
-
-
-class Exit(Command):
-    """
-    Represents an exit command in the abstract syntax tree.
-    """
-
-    pass

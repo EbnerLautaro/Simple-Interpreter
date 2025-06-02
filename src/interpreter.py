@@ -6,7 +6,6 @@ from abstract_syntax_tree import (
     Block,
     Boolean,
     Command,
-    Exit,
     Expression,
     If,
     Number,
@@ -107,7 +106,6 @@ class Interpreter:
         Executes a command node.
 
         Raises:
-            SystemExit: If an Exit command is encountered.
             TypeError: If the command type is unrecognized.
         """
         if isinstance(command, Assignment):
@@ -118,13 +116,6 @@ class Interpreter:
             if allow_output:
                 value = self._evaluate_expression(command.expression)
                 print(value)
-
-        elif isinstance(command, Exit):
-            if not allow_output:
-                raise SystemExit()
-
-            print("Exiting the program.")
-            raise SystemExit()
 
         elif isinstance(command, Block):
             for statement in command.statements:
